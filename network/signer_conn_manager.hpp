@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rpc_service/rpc_services.hpp"
+#include "rpc_services/rpc_services.hpp"
 #include <memory>
 #include <mutex>
 #include <thread>

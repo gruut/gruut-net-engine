@@ -5,7 +5,7 @@
 #include <grpc/support/log.h>
 #include <grpcpp/grpcpp.h>
 
-#include "../p2p/routing.hpp"
+#include "../kademlia/routing.hpp"
 #include "../signer_conn_manager.hpp"
 
 #include <iostream>

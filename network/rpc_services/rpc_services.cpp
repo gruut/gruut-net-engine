@@ -139,10 +139,16 @@ void PingPong::proceed() {
 	new PingPong(m_service, m_completion_queue, m_routing_table);
 
 	std::string sender_id = m_request.node_id();
+	std::string sender_address = m_request.sender_address();
+	std::string sender_port = m_request.sender_port();
+	uint32_t version = m_request.version();
 	uint64_t time_stamp = m_request.time_stamp();
+	//TODO : 받은 Ping 에 대해서 routing table 업데이트 필요.
 
 	//TODO : current time
 	m_reply.set_time_stamp(0);
+	m_reply.set_version(1);
+	m_reply.set_node_id(MY_ID);
 	Status rpc_status = Status::OK;
 
 	m_receive_status = RpcCallStatus::FINISH;
