@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rpc_service/rpc_services.hpp"
+#include "rpc_services/rpc_services.hpp"
 #include <string>
 
 namespace gruut {
@@ -14,15 +14,13 @@ public:
   }
 
   void setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
-  			 std::shared_ptr<RoutingTable> routing_table,
-  			 std::shared_ptr<ThreadPool> th_pool);
+  			 std::shared_ptr<RoutingTable> routing_table);
 
   void run(const std::string &port_num);
 
 private:
   std::shared_ptr<SignerConnTable> m_signer_conn_table;
   std::shared_ptr<RoutingTable> m_routing_table;
-  std::shared_ptr<ThreadPool> m_th_pool;
 
   std::string m_port_num;
   std::unique_ptr<Server> m_server;

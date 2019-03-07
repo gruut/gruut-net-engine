@@ -5,12 +5,10 @@ namespace gruut {
 namespace net {
 
 void RpcServer::setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
-                      std::shared_ptr<RoutingTable> routing_table,
-                      std::shared_ptr<ThreadPool> th_pool) {
+                      std::shared_ptr<RoutingTable> routing_table) {
 
   m_signer_conn_table = std::move(signer_conn_table);
   m_routing_table = std::move(routing_table);
-  m_th_pool = std::move(th_pool);
 }
 
 void RpcServer::initService() {
@@ -24,19 +22,22 @@ void RpcServer::initService() {
 void RpcServer::start(){
   void *tag;
   bool ok;
+
   while (true) {
-    GPR_ASSERT(m_completion_queue->Next(&tag, &ok));
-    if(ok)
-	  static_cast<CallData *>(tag)->proceed();
-    else
-      std::this_thread::sleep_for(std::chrono::milliseconds(5));
+      GPR_ASSERT(m_completion_queue->Next(&tag, &ok));
+      if (ok)
+        static_cast<CallData *>(tag)->proceed();
+      else
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
   }
+
 }
 
 void RpcServer::run(const std::string &port_num) {
   std::string server_address;
   server_address = "0.0.0.0:" + port_num;
 
+  std::cout<<"Rpc Server listening on"<<server_address<<std::endl;
   m_port_num = port_num;
   ServerBuilder builder;
 

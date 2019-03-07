@@ -15,7 +15,6 @@
 #include <utility>
 #include <unordered_map>
 #include <mutex>
-#include <tuple>
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
