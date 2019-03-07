@@ -7,7 +7,6 @@
 
 #include "../p2p/routing.hpp"
 #include "../signer_conn_manager.hpp"
-#include "../../include/threadpool.hpp"
 
 #include <iostream>
 #include <memory>
@@ -20,9 +19,6 @@ using namespace kademlia;
 
 namespace gruut {
 namespace net{
-
-using Closure = std::function<void()> ;
-using ThreadPool = tf::WorkStealingThreadpool<Closure>;
 
 enum class RpcCallStatus { CREATE, PROCESS, READ, WAIT, FINISH };
 
@@ -47,7 +43,6 @@ protected:
   ServerCompletionQueue *m_completion_queue;
   ServerContext m_context;
   RpcCallStatus m_receive_status;
-  std::shared_ptr<ThreadPool> m_th_pool;
 };
 
 class OpenChannel final : public CallData {
