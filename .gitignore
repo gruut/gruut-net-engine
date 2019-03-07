@@ -53,7 +53,6 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-.gitignore
 .idea/.name
 .idea/deployment.xml
 .idea/encodings.xml
@@ -61,5 +60,3 @@ fabric.properties
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
-CMakeLists.txt
-main.cpp
