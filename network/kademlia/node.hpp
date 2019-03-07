@@ -10,7 +10,7 @@
 #include <string>
 
 #include "../network_config.hpp"
-#include "../hash.hpp"
+#include "hash.hpp"
 
 namespace gruut {
 namespace net {
