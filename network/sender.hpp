@@ -13,9 +13,12 @@ public:
   PongData pingReq(const std::string &receiver_addr, const std::string &receiver_port);
   NeighborsData findNodeReq(const std::string &receiver_addr, const std::string &receiver_port, const Node::IdType &target_id);
 
-private:
-  std::unique_ptr< KademliaService::Stub> genKademliaStub(const std::string &addr, const std::string &port);
+  void sendToMerger(std::vector<IpEndpoint> &addr_list, std::string &packed_msg, std::string &msg_id, bool broadcast = false);
+  void sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg);
 
+private:
+  template<typename TStub, typename TService>
+  std::unique_ptr<TStub> genStub(const std::string &addr, const std::string &port);
 };
 
 }

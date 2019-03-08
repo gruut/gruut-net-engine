@@ -61,6 +61,8 @@ void GeneralService::proceed() {
 		std::string packed_msg = m_request.message();
 
 		//TODO: MessageHandler handle message
+		//MessageHandler의 처리 상황에 따라 Status값 바뀔 것.
+		rpc_status = Status::OK;
 
 		if(rpc_status.ok()){
 		  m_reply.set_status(grpc_general::MsgStatus_Status_SUCCESS); // SUCCESS
