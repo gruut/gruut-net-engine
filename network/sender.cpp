@@ -3,16 +3,17 @@
 namespace gruut{
 namespace net{
 
-std::unique_ptr<KademliaService::Stub> Sender::genKademliaStub(const std::string &addr, const std::string &port) {
+template<typename TStub, typename TService>
+std::unique_ptr<TStub> Sender::genStub(const std::string &addr, const std::string &port) {
 
   auto credential = InsecureChannelCredentials();
   auto channel = CreateChannel(addr + ":" + port, credential);
-  return KademliaService::NewStub(channel);
+  return TService::NewStub(channel);
 }
 
 PongData Sender::pingReq(const std::string &receiver_addr, const std::string &receiver_port) {
 
-  auto stub = genKademliaStub(receiver_addr, receiver_port);
+  auto stub = genStub<KademliaService::Stub, KademliaService>(receiver_addr, receiver_port);
   ClientContext context;
 
   //TODO : Time stamp 값 현재 시간값 으로 변경해야함.
@@ -38,7 +39,7 @@ NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
                                   const std::string &receiver_port,
                                   const Node::IdType &target_id) {
 
-  auto stub = genKademliaStub(receiver_addr, receiver_port);
+  auto stub = genStub<KademliaService::Stub, KademliaService>(receiver_addr, receiver_port);
   ClientContext context;
 
   Target target;
@@ -46,6 +47,7 @@ NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
   target.set_sender_id(MY_ID);
   target.set_sender_address(IP_ADDRESS);
   target.set_sender_port(DEFAULT_PORT_NUM);
+  target.set_time_stamp(0);
 
   Neighbors neighbors;
 
@@ -59,6 +61,64 @@ NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
   }
 
   return NeighborsData{ neighbor_list, neighbors.time_stamp(), status};
+}
+
+
+void Sender::sendToMerger(std::vector<IpEndpoint> &addr_list,
+                          std::string &packed_msg,
+                          std::string &msg_id,
+                          bool broadcast) {
+
+  RequestMsg req_msg;
+  req_msg.set_message(packed_msg);
+  req_msg.set_broadcast(broadcast);
+
+  if(broadcast)
+    req_msg.set_message_id(msg_id);
+
+  for(auto &addr : addr_list){
+     auto stub = genStub<GruutGeneralService::Stub,GruutGeneralService>(addr.address, addr.port);
+     ClientContext context;
+
+     MsgStatus msg_status;
+
+     grpc::Status status = stub->GeneralService(&context, req_msg, &msg_status);
+     if(!status.ok()){
+        std::cout<<"Could not send message to "<<addr.address + ":" + addr.port<<std::endl;
+     }
+     else{
+         //TODO : 보낸 Msg의 상태에 따른 처리 필요.
+         switch(msg_status.status()) {
+         case MsgStatus_Status_SUCCESS: {
+
+         }break;
+         case MsgStatus_Status_INTERNAL:{
+
+         }break;
+         case MsgStatus_Status_INVALID: {
+
+         }break;
+
+         default:
+           break;
+         }
+     }
+  }
+}
+void Sender::sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg){
+
+  if(signer_list.size() != packed_msg.size())
+    return;
+
+  size_t num_of_signer = signer_list.size();
+
+  for(int i = 0; i < num_of_signer; i++){
+    auto tag = static_cast<Identity *>(signer_list[i].tag_identity);
+    ReplyMsg reply;
+    reply.set_message(packed_msg[i]);
+    if(signer_list[i].send_msg != nullptr)
+      signer_list[i].send_msg->Write(reply, tag);
+  }
 }
 
 }
