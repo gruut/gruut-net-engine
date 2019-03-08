@@ -20,7 +20,7 @@ message ReplyMsg {
 
 message RequestMsg {
     bool broadcast = 1;
-    string messageID =2;
+    string message_id =2;
     bytes message = 3;
 }
 
