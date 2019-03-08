@@ -14,10 +14,12 @@ ENDIF (CURL_FOUND)
 file(GLOB UNIT_TEST_SOURCE_FILES
         "kademlia_test.cpp"
         "httpclient_test.cpp"
+        "msg_schema_validator_test.cpp"
         )
 
 
 file(GLOB SOURCE_FILES
+         "../include/*.cpp"
          "../network/kademlia/*.cpp"
          "../network/*.cpp"
          "../network/rpc_services/*.cpp"
