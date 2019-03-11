@@ -13,6 +13,7 @@ void RpcServer::setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
 
 void RpcServer::initService() {
 
+  new OpenChannel(&m_general_service, m_completion_queue.get(), m_signer_conn_table);
   new GeneralService(&m_general_service, m_completion_queue.get(), m_routing_table);
 
   new FindNode(&m_kademlia_service, m_completion_queue.get(), m_routing_table);
