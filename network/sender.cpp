@@ -3,6 +3,11 @@
 namespace gruut{
 namespace net{
 
+void Sender::setUp(std::shared_ptr<std::set<string>> broadcast_check_table){
+
+  m_broadcast_check_table  = std::move(broadcast_check_table);
+}
+
 template<typename TStub, typename TService>
 std::unique_ptr<TStub> Sender::genStub(const std::string &addr, const std::string &port) {
 
@@ -63,10 +68,9 @@ NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
   return NeighborsData{ neighbor_list, neighbors.time_stamp(), status};
 }
 
-
 void Sender::sendToMerger(std::vector<IpEndpoint> &addr_list,
                           std::string &packed_msg,
-                          std::string &msg_id,
+                          const std::string &msg_id,
                           bool broadcast) {
 
   RequestMsg req_msg;
@@ -105,6 +109,8 @@ void Sender::sendToMerger(std::vector<IpEndpoint> &addr_list,
      }
   }
 }
+
+
 void Sender::sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg){
 
   if(signer_list.size() != packed_msg.size())

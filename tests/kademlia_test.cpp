@@ -68,8 +68,11 @@ BOOST_AUTO_TEST_SUITE(Test_KademliaService)
 	  	std::shared_ptr<SignerConnTable> signer_table =
 	  		std::make_shared<SignerConnTable>();
 
+	  	std::shared_ptr<std::set<string>> broadcast_check_table =
+	  		std::make_shared<std::set<string>>();
+
 	  	RpcServer rpc_server;
-	  	rpc_server.setUp(signer_table, routing_table);
+	  	rpc_server.setUp(signer_table, routing_table, broadcast_check_table);
 
 	  	rpc_server.run(TEST_PORT);
 	});

@@ -1,4 +1,6 @@
 #include "rpc_services.hpp"
+#include "../sender.hpp"
+
 #include <exception>
 #include <thread>
 #include <future>
@@ -53,12 +55,27 @@ void GeneralService::proceed() {
 	}break;
 
 	case RpcCallStatus::PROCESS: {
-	  new GeneralService(m_service, m_completion_queue, m_routing_table);
+	  new GeneralService(m_service, m_completion_queue, m_routing_table, m_broadcast_check_table);
 
 	  Status rpc_status;
-
 	  try {
 		std::string packed_msg = m_request.message();
+
+		//Forwarding message to other nodes
+		if(m_request.broadcast()){
+		  if(m_broadcast_check_table->count(m_request.message_id())){
+
+		    std::vector<IpEndpoint> node_addr_list;
+		    //selecting random node in each kBuckets
+		    for(auto bucket = m_routing_table->begin(); bucket != m_routing_table->end(); bucket++){
+		      const auto &node = bucket->selectRandomNode();
+			  node_addr_list.emplace_back(node.getEndpoint());
+		    }
+
+		    Sender sender;
+		    sender.sendToMerger(node_addr_list, packed_msg, m_request.message_id(), true);
+		  }
+		}
 
 		//TODO: MessageHandler handle message
 		//MessageHandler의 처리 상황에 따라 Status값 바뀔 것.

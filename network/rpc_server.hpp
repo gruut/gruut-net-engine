@@ -2,6 +2,7 @@
 
 #include "rpc_services/rpc_services.hpp"
 #include <string>
+#include <set>
 
 namespace gruut {
 namespace net {
@@ -14,13 +15,15 @@ public:
   }
 
   void setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
-  			 std::shared_ptr<RoutingTable> routing_table);
+  			 std::shared_ptr<RoutingTable> routing_table,
+  			 std::shared_ptr<std::set<string>> broadcast_check_table);
 
   void run(const std::string &port_num);
 
 private:
   std::shared_ptr<SignerConnTable> m_signer_conn_table;
   std::shared_ptr<RoutingTable> m_routing_table;
+  std::shared_ptr<std::set<string>> m_broadcast_check_table;
 
   std::string m_port_num;
   std::unique_ptr<Server> m_server;

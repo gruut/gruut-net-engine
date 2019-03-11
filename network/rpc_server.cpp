@@ -5,16 +5,18 @@ namespace gruut {
 namespace net {
 
 void RpcServer::setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
-                      std::shared_ptr<RoutingTable> routing_table) {
+                      std::shared_ptr<RoutingTable> routing_table,
+                      std::shared_ptr<std::set<string>> broadcast_check_table) {
 
   m_signer_conn_table = std::move(signer_conn_table);
   m_routing_table = std::move(routing_table);
+  m_broadcast_check_table = std::move(broadcast_check_table);
 }
 
 void RpcServer::initService() {
 
   new OpenChannel(&m_general_service, m_completion_queue.get(), m_signer_conn_table);
-  new GeneralService(&m_general_service, m_completion_queue.get(), m_routing_table);
+  new GeneralService(&m_general_service, m_completion_queue.get(), m_routing_table, m_broadcast_check_table);
 
   new FindNode(&m_kademlia_service, m_completion_queue.get(), m_routing_table);
   new PingPong(&m_kademlia_service, m_completion_queue.get(), m_routing_table);

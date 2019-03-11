@@ -73,8 +73,10 @@ class GeneralService final :public CallData {
 public:
   GeneralService(GruutGeneralService::AsyncService *service,
 				 ServerCompletionQueue *cq,
-				 std::shared_ptr<RoutingTable> routing_table)
-	  : m_responder(&m_context), m_routing_table(std::move(routing_table)){
+				 std::shared_ptr<RoutingTable> routing_table,
+				 std::shared_ptr<std::set<string>> broadcast_check_table)
+	  : m_responder(&m_context), m_routing_table(std::move(routing_table)),
+	    m_broadcast_check_table(std::move(broadcast_check_table)){
 
     m_service = service;
 	m_completion_queue = cq;
@@ -89,6 +91,7 @@ private:
   grpc_general::MsgStatus m_reply;
   ServerAsyncResponseWriter<grpc_general::MsgStatus> m_responder;
 
+  std::shared_ptr<std::set<string>> m_broadcast_check_table;
   std::shared_ptr<RoutingTable> m_routing_table;
   void proceed() override;
 };
