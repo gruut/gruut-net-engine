@@ -1,6 +1,7 @@
 #pragma once
 #include "rpc_server.hpp"
 #include "sender.hpp"
+#include <set>
 
 namespace gruut {
 namespace net {
@@ -20,6 +21,7 @@ public:
 private:
   std::shared_ptr<SignerConnTable> m_signer_conn_table;
   std::shared_ptr<RoutingTable> m_routing_table;
+  std::shared_ptr<std::set<string>> m_broadcast_check_table;
 
   Sender m_sender;
   RpcServer m_rpc_server;

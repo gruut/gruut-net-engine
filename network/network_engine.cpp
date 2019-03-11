@@ -9,10 +9,13 @@ NetworkEngine::NetworkEngine() {
   //TODO : 자신의 ID를 인증서버로 부터 받아 올 수 있을 떄 수정 될 것.
   Node my_node(Hash<160>::sha1(MY_ID), MY_ID, IP_ADDRESS, DEFAULT_PORT_NUM);
   m_routing_table = std::make_shared<RoutingTable>(my_node, KBUCKET_SIZE);
+
+  m_broadcast_check_table = std::make_shared<std::set<string>>();
 }
 
 void NetworkEngine::setUp(){
-  m_rpc_server.setUp(m_signer_conn_table, m_routing_table);
+  m_rpc_server.setUp(m_signer_conn_table, m_routing_table, m_broadcast_check_table);
+  m_sender.setUp(m_broadcast_check_table);
 }
 
 void NetworkEngine::run() {
