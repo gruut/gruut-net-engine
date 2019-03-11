@@ -35,7 +35,7 @@ std::size_t RoutingTable::bucketsCount() const { return m_buckets.size(); }
 bool RoutingTable::empty() const { return m_buckets.front().empty(); }
 
 
-std::size_t RoutingTable::getBucketIndexFor(const Node::IdTypeHash &node) const {
+std::size_t RoutingTable::getBucketIndexFor(const HashedIdType &node) const {
 
   auto num_buckets = m_buckets.size();
 
@@ -140,7 +140,7 @@ bool RoutingTable::peerTimedOut(Node const &peer) {
   return false;
 }
 
-std::vector<Node> RoutingTable::findNeighbors(Node::IdTypeHash const &id, std::size_t max_number)  {
+std::vector<Node> RoutingTable::findNeighbors(HashedIdType const &id, std::size_t max_number)  {
 
   std::vector<Node> neighbors;
   auto count = 0U;

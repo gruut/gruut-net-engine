@@ -12,7 +12,7 @@ public:
   Sender() = default;
 
   PongData pingReq(const std::string &receiver_addr, const std::string &receiver_port);
-  NeighborsData findNodeReq(const std::string &receiver_addr, const std::string &receiver_port, const Node::IdType &target_id);
+  NeighborsData findNodeReq(const std::string &receiver_addr, const std::string &receiver_port, const IdType &target_id);
 
   void sendToMerger(std::vector<IpEndpoint> &addr_list, std::string &packed_msg, const std::string &msg_id = {}, bool broadcast = false);
   void sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg);

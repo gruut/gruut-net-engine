@@ -20,7 +20,7 @@
 #include <boost/iterator/reverse_iterator.hpp>
 
 #include "kbucket.hpp"
-#include "../network_config.hpp"
+#include "../config/network_config.hpp"
 
 namespace gruut {
 namespace net {
@@ -116,14 +116,14 @@ public:
 
   bool peerTimedOut(Node const &peer);
 
-  std::vector<Node> findNeighbors(Node::IdTypeHash const &id)  {
+  std::vector<Node> findNeighbors(HashedIdType const &id)  {
 	return findNeighbors(id, m_ksize);
   };
 
-  std::vector<Node> findNeighbors(Node::IdTypeHash const &id,
+  std::vector<Node> findNeighbors(HashedIdType const &id,
 								  std::size_t max_number);
 
-  size_t getBucketIndexFor(const Node::IdTypeHash &node) const;
+  size_t getBucketIndexFor(const HashedIdType &node) const;
 
 private:
 
@@ -135,7 +135,7 @@ private:
 
   std::deque<KBucket> m_buckets;
 
-  std::unordered_map<Node::IdType, IpEndpoint> m_node_table;
+  std::unordered_map<IdType, IpEndpoint> m_node_table;
 
   std::mutex m_buckets_mutex;
 };

@@ -28,7 +28,7 @@ private:
 
   void setUp();
   void pingTask(const Node &node);
-  void findNeighborsTask(const Node::IdType &id, const Node::IdTypeHash &hashed_id);
+  void findNeighborsTask(const IdType &id, const HashedIdType &hashed_id);
   void refreshBuckets();
   void scheduleRefreshBuckets();
 

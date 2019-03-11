@@ -9,35 +9,21 @@
 #include <chrono>
 #include <string>
 
-#include "../network_config.hpp"
-#include "hash.hpp"
+#include "../config/network_config.hpp"
+#include "../config/network_type.hpp"
 
 namespace gruut {
 namespace net {
 
-struct IpEndpoint {
-  std::string address;
-  std::string port;
-
-  bool operator==(IpEndpoint const &rhs) const {
-    return (this->address == rhs.address) && (this->port == rhs.port);
-  }
-};
-
 class Node {
-public:
-
-  using IdType = std::string; // 32bytes ID
-  using IdTypeHash = Hash160; // 32bytes ID를 hash160
-
 public:
   Node() = default;
 
-  Node(IdTypeHash const &id_hash, IdType const &id, std::string const &ip_address,
+  Node(HashedIdType const &id_hash, IdType const &id, std::string const &ip_address,
 	   std::string const &port_number)
 	  : m_id_hash{id_hash}, m_id{id}, m_endpoint{ip_address, port_number} {}
 
-  Node(IdTypeHash const &id_hash, IdType const &id, IpEndpoint const &ep) : m_id_hash(id_hash), m_id(id), m_endpoint(ep) {}
+  Node(HashedIdType const &id_hash, IdType const &id, IpEndpoint const &ep) : m_id_hash(id_hash), m_id(id), m_endpoint(ep) {}
 
   Node(const Node &other) : m_id_hash(other.m_id_hash),
   							m_id(other.m_id),
@@ -75,7 +61,7 @@ public:
 	return (lhs.getIdHash() == rhs.getIdHash()) && (lhs.getEndpoint() == rhs.getEndpoint());
   }
 
-  IdTypeHash const &getIdHash() const { return m_id_hash; }
+  HashedIdType const &getIdHash() const { return m_id_hash; }
   IdType const &getId() const { return m_id; }
   IpEndpoint const &getEndpoint() const { return m_endpoint; }
 
@@ -91,20 +77,20 @@ public:
 		> NODE_INACTIVE_TIME_BEFORE_QUESTIONABLE;
   }
 
-  IdTypeHash distanceTo(Node const &node) const { return distanceTo(node.getIdHash()); }
-  IdTypeHash distanceTo(Hash160 const &hash) const {
+  HashedIdType distanceTo(Node const &node) const { return distanceTo(node.getIdHash()); }
+  HashedIdType distanceTo(Hash160 const &hash) const {
 	return m_id_hash ^ hash;
   }
 
   void incFailuresCount() { ++m_failed_requests_count; }
 
-  IdTypeHash &getIdHash() { return m_id_hash; }
+  HashedIdType &getIdHash() { return m_id_hash; }
   IdType &getId()  { return m_id; }
   IpEndpoint &getEndpoint() { return m_endpoint; }
 
 private:
   IdType  m_id;
-  IdTypeHash m_id_hash;
+  HashedIdType m_id_hash;
   IpEndpoint m_endpoint;
 
   int m_failed_requests_count{0};
@@ -112,15 +98,15 @@ private:
   std::chrono::steady_clock::time_point m_last_seen_time;
 };
 
-inline Node::IdTypeHash distance(Node const &a, Node const &b) {
+inline HashedIdType distance(Node const &a, Node const &b) {
   return a.distanceTo(b);
 }
 
-inline Node::IdTypeHash distance(Node const &node, Hash160 const &hash) {
+inline HashedIdType distance(Node const &node, Hash160 const &hash) {
   return node.distanceTo(hash);
 }
 
-inline Node::IdTypeHash distance(Node::IdTypeHash const &ida, Node::IdTypeHash const &idb) {
+inline HashedIdType distance(HashedIdType const &ida, HashedIdType const &idb) {
   return ida ^ idb;
 }
 

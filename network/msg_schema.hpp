@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../include/json-schema.hpp"
-#include "message.hpp"
+#include "config/message.hpp"
 #include <map>
 #include <vector>
 

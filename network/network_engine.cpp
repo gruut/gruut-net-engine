@@ -34,8 +34,8 @@ void NetworkEngine::pingTask(const Node& node) {
   }
 }
 
-void NetworkEngine::findNeighborsTask(const gruut::net::Node::IdType &id,
-									  const gruut::net::Node::IdTypeHash &hashed_id) {
+void NetworkEngine::findNeighborsTask(const IdType &id,
+									  const HashedIdType &hashed_id) {
 
   auto target_list = m_routing_table->findNeighbors(hashed_id, PARALLELISM_ALPHA);
 

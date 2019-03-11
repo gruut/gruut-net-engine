@@ -14,7 +14,7 @@
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 
-#include "../network_config.hpp"
+#include "../config/network_config.hpp"
 #include "node.hpp"
 
 namespace gruut {
@@ -91,7 +91,7 @@ public:
 
   std::chrono::seconds timeSinceLastUpdated() const;
 
-  bool canHoldNode(const Node::IdTypeHash &node) const;
+  bool canHoldNode(const HashedIdType &node) const;
 
   std::string sharedPrefix() const {
 	return m_prefix.to_string().substr(0, m_prefix_size);

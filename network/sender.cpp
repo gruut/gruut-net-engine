@@ -42,7 +42,7 @@ PongData Sender::pingReq(const std::string &receiver_addr, const std::string &re
 
 NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
                                   const std::string &receiver_port,
-                                  const Node::IdType &target_id) {
+                                  const IdType &target_id) {
 
   auto stub = genStub<KademliaService::Stub, KademliaService>(receiver_addr, receiver_port);
   ClientContext context;
