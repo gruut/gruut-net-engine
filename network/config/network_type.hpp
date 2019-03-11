@@ -17,5 +17,7 @@ namespace net{
 
   using IdType = std::string; // 32bytes ID
   using HashedIdType = Hash160; // 32bytes ID를 hash160
+
+  using BroadcastMsgTable = std::unordered_map<std::string, uint64_t>;
 }
 }

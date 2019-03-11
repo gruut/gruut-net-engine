@@ -21,7 +21,7 @@ public:
 private:
   std::shared_ptr<SignerConnTable> m_signer_conn_table;
   std::shared_ptr<RoutingTable> m_routing_table;
-  std::shared_ptr<std::set<string>> m_broadcast_check_table;
+  std::shared_ptr<BroadcastMsgTable> m_broadcast_check_table;
 
   Sender m_sender;
   RpcServer m_rpc_server;

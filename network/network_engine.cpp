@@ -10,7 +10,7 @@ NetworkEngine::NetworkEngine() {
   Node my_node(Hash<160>::sha1(MY_ID), MY_ID, IP_ADDRESS, DEFAULT_PORT_NUM);
   m_routing_table = std::make_shared<RoutingTable>(my_node, KBUCKET_SIZE);
 
-  m_broadcast_check_table = std::make_shared<std::set<string>>();
+  m_broadcast_check_table = std::make_shared<BroadcastMsgTable>();
 }
 
 void NetworkEngine::setUp(){
