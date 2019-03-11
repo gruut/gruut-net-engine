@@ -74,7 +74,7 @@ void KBucket::removeNode(KBucket::iterator &node_iter) {
   }
 }
 
-bool KBucket::canHoldNode(const Node::IdTypeHash &node) const {
+bool KBucket::canHoldNode(const HashedIdType &node) const {
 
   auto id_bits = node.toBitSet();
   auto last_bit = KEYSIZE_BITS - m_prefix_size;
