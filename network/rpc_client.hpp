@@ -7,9 +7,9 @@
 namespace gruut{
 namespace net{
 
-class Sender{
+class RpcClient{
 public:
-  Sender() = default;
+  RpcClient() = default;
 
   PongData pingReq(const std::string &receiver_addr, const std::string &receiver_port);
   NeighborsData findNodeReq(const std::string &receiver_addr, const std::string &receiver_port, const IdType &target_id);

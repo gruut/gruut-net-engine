@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include "../network/rpc_server.hpp"
-#include "../network/sender.hpp"
+#include "../network/rpc_client.hpp"
 
 #include <thread>
 #include <future>
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_SUITE(Test_KademliaService)
 
 	BOOST_AUTO_TEST_CASE(self_Ping_Pong) {
   		this_thread::sleep_for(chrono::seconds(2));
-		Sender ping_sender;
+		RpcClient ping_sender;
 		auto received_data = ping_sender.pingReq(LOCAL_ADDR, TEST_PORT);
 
 		BOOST_CHECK_EQUAL(received_data.node_id, MY_ID);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_SUITE(Test_KademliaService)
 	}
 
 	BOOST_AUTO_TEST_CASE(self_Find_Node) {
-	    Sender find_node_sender;
+	    RpcClient find_node_sender;
 	    auto random_target = genTestID(1);
 	    auto received_data = find_node_sender.findNodeReq(LOCAL_ADDR, TEST_PORT, random_target[0]);
 

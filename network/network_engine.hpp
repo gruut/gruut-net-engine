@@ -1,6 +1,6 @@
 #pragma once
 #include "rpc_server.hpp"
-#include "sender.hpp"
+#include "rpc_client.hpp"
 #include "config/network_config.hpp"
 namespace gruut {
 namespace net {
@@ -22,7 +22,7 @@ private:
   std::shared_ptr<RoutingTable> m_routing_table;
   std::shared_ptr<BroadcastMsgTable> m_broadcast_check_table;
 
-  Sender m_sender;
+  RpcClient m_sender;
   RpcServer m_rpc_server;
 
   void setUp();

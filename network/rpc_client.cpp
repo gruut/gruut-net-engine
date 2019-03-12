@@ -1,22 +1,22 @@
-#include "sender.hpp"
+#include "rpc_client.hpp"
 
 namespace gruut{
 namespace net{
 
-void Sender::setUp(std::shared_ptr<BroadcastMsgTable> broadcast_check_table){
+void RpcClient::setUp(std::shared_ptr<BroadcastMsgTable> broadcast_check_table){
 
   m_broadcast_check_table  = std::move(broadcast_check_table);
 }
 
 template<typename TStub, typename TService>
-std::unique_ptr<TStub> Sender::genStub(const std::string &addr, const std::string &port) {
+std::unique_ptr<TStub> RpcClient::genStub(const std::string &addr, const std::string &port) {
 
   auto credential = InsecureChannelCredentials();
   auto channel = CreateChannel(addr + ":" + port, credential);
   return TService::NewStub(channel);
 }
 
-PongData Sender::pingReq(const std::string &receiver_addr, const std::string &receiver_port) {
+PongData RpcClient::pingReq(const std::string &receiver_addr, const std::string &receiver_port) {
 
   auto stub = genStub<KademliaService::Stub, KademliaService>(receiver_addr, receiver_port);
   ClientContext context;
@@ -40,7 +40,7 @@ PongData Sender::pingReq(const std::string &receiver_addr, const std::string &re
   return ret;
 }
 
-NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
+NeighborsData RpcClient::findNodeReq(const std::string &receiver_addr,
                                   const std::string &receiver_port,
                                   const IdType &target_id) {
 
@@ -68,7 +68,7 @@ NeighborsData Sender::findNodeReq(const std::string &receiver_addr,
   return NeighborsData{ neighbor_list, neighbors.time_stamp(), status};
 }
 
-void Sender::sendToMerger(std::vector<IpEndpoint> &addr_list,
+void RpcClient::sendToMerger(std::vector<IpEndpoint> &addr_list,
                           std::string &packed_msg,
                           const std::string &msg_id,
                           bool broadcast) {
@@ -111,7 +111,7 @@ void Sender::sendToMerger(std::vector<IpEndpoint> &addr_list,
 }
 
 
-void Sender::sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg){
+void RpcClient::sendToSigner(std::vector<SignerRpcInfo> &signer_list, std::vector<string> &packed_msg){
 
   if(signer_list.size() != packed_msg.size())
     return;

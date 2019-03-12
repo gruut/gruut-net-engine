@@ -1,5 +1,5 @@
 #include "rpc_services.hpp"
-#include "../sender.hpp"
+#include "../rpc_client.hpp"
 
 #include <exception>
 #include <thread>
@@ -81,7 +81,7 @@ void GeneralService::proceed() {
 			  node_addr_list.emplace_back(node.getEndpoint());
 		    }
 
-		    Sender sender;
+		    RpcClient sender;
 		    sender.sendToMerger(node_addr_list, packed_msg, m_request.message_id(), true);
 		  }
 		}
