@@ -3,13 +3,13 @@
 namespace gruut{
 namespace net {
 
-CURLcode HttpClient::post(const std::string &packed_msg) {
+CURLcode HttpClient::post(const std::string &url_addr, const std::string &json_dump) {
   try {
-	m_curl.setOpt(CURLOPT_URL, m_address.data());
+	m_curl.setOpt(CURLOPT_URL, url_addr.data());
 	m_curl.setOpt(CURLOPT_POST, 1L);
 	m_curl.setOpt(CURLOPT_TIMEOUT, 2L);
 
-	const auto escaped_field_data = m_curl.escape(packed_msg);
+	const auto escaped_field_data = m_curl.escape(json_dump);
 	const std::string post_field = getPostField("message", escaped_field_data);
 
 	m_curl.setOpt(CURLOPT_POSTFIELDS, post_field.data());
@@ -24,12 +24,12 @@ CURLcode HttpClient::post(const std::string &packed_msg) {
   return CURLE_OK;
 }
 
-CURLcode HttpClient::postAndGetReply(const std::string &msg, nlohmann::json &response_json) {
+CURLcode HttpClient::postAndGetReply(const std::string &url_addr, const std::string &json_dump, nlohmann::json &response_json) {
   try {
-	m_curl.setOpt(CURLOPT_URL, m_address.data());
+	m_curl.setOpt(CURLOPT_URL, url_addr.data());
 	m_curl.setOpt(CURLOPT_POST, 1L);
 
-	const auto escaped_filed_data = m_curl.escape(msg);
+	const auto escaped_filed_data = m_curl.escape(json_dump);
 	const std::string post_field = getPostField("message", escaped_filed_data);
 
 	m_curl.setOpt(CURLOPT_POSTFIELDS, post_field.data());
@@ -49,18 +49,6 @@ CURLcode HttpClient::postAndGetReply(const std::string &msg, nlohmann::json &res
   }
 
   return CURLE_OK;
-}
-
-bool HttpClient::checkServStatus() {
-  try {
-	m_curl.setOpt(CURLOPT_URL, m_address.data());
-	m_curl.setOpt(CURLOPT_FAILONERROR, 1L);
-
-	m_curl.perform();
-  } catch (curlpp::EasyException &err) {
-	return false;
-  }
-  return true;
 }
 
 std::string HttpClient::getPostField(const std::string &key, const std::string &value) {

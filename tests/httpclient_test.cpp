@@ -41,17 +41,17 @@ BOOST_AUTO_TEST_SUITE(Test_HttpClient)
 
   BOOST_AUTO_TEST_CASE(Post) {
     this_thread::sleep_for(chrono::seconds(2));
-    HttpClient http_client("localhost:8080/string");
+    HttpClient http_client;
 
-  	BOOST_CHECK_EQUAL(http_client.post(SAMPLE_JSON_REQ.dump()), 0);
+  	BOOST_CHECK_EQUAL(http_client.post("localhost:8080/string", SAMPLE_JSON_REQ.dump()), 0);
   }
 
   BOOST_AUTO_TEST_CASE(PostAndGetReply){
-  	HttpClient http_client("localhost:8080/string");
+  	HttpClient http_client;
 
 	nlohmann::json reply_json;
 
-	BOOST_CHECK_EQUAL(http_client.postAndGetReply(SAMPLE_JSON_REQ.dump(), reply_json), 0);
+	BOOST_CHECK_EQUAL(http_client.postAndGetReply("localhost:8080/string",SAMPLE_JSON_REQ.dump(), reply_json), 0);
 	BOOST_CHECK_EQUAL(reply_json, SAMPLE_JSON_RES);
 
   }
