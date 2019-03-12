@@ -68,15 +68,16 @@ NeighborsData RpcClient::findNodeReq(const std::string &receiver_addr,
   return NeighborsData{ neighbor_list, neighbors.time_stamp(), status};
 }
 
-void RpcClient::sendToMerger(std::vector<IpEndpoint> &addr_list,
-                          std::string &packed_msg,
-                          const std::string &msg_id,
-                          bool broadcast) {
+std::vector<GeneralData> RpcClient::sendToMerger(std::vector<IpEndpoint> &addr_list,
+                                                  std::string &packed_msg,
+                                                  const std::string &msg_id,
+                                                  bool broadcast) {
 
   RequestMsg req_msg;
   req_msg.set_message(packed_msg);
   req_msg.set_broadcast(broadcast);
 
+  std::vector<GeneralData> result_list;
   if(broadcast)
     req_msg.set_message_id(msg_id);
 
@@ -87,27 +88,18 @@ void RpcClient::sendToMerger(std::vector<IpEndpoint> &addr_list,
      MsgStatus msg_status;
 
      grpc::Status status = stub->GeneralService(&context, req_msg, &msg_status);
+
+     GeneralData data;
+     data.status = status;
      if(!status.ok()){
         std::cout<<"Could not send message to "<<addr.address + ":" + addr.port<<std::endl;
      }
      else{
-         //TODO : 보낸 Msg의 상태에 따른 처리 필요.
-         switch(msg_status.status()) {
-         case MsgStatus_Status_SUCCESS: {
-
-         }break;
-         case MsgStatus_Status_INTERNAL:{
-
-         }break;
-         case MsgStatus_Status_INVALID: {
-
-         }break;
-
-         default:
-           break;
-         }
+       data.msg_status = msg_status;
      }
+     result_list.emplace_back(data);
   }
+  return result_list;
 }
 
 

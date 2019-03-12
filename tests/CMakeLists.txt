@@ -12,7 +12,7 @@ IF (CURL_FOUND)
 ENDIF (CURL_FOUND)
 
 file(GLOB UNIT_TEST_SOURCE_FILES
-        "kademlia_test.cpp"
+        "rpc_service_test.cpp"
         "httpclient_test.cpp"
         "msg_schema_validator_test.cpp"
         )
