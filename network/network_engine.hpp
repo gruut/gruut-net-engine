@@ -1,8 +1,7 @@
 #pragma once
 #include "rpc_server.hpp"
 #include "sender.hpp"
-#include <set>
-
+#include "config/network_config.hpp"
 namespace gruut {
 namespace net {
 
@@ -31,6 +30,8 @@ private:
   void findNeighborsTask(const IdType &id, const HashedIdType &hashed_id);
   void refreshBuckets();
   void scheduleRefreshBuckets();
+
+  void refreshBroadcastTable();
 
 };
 
