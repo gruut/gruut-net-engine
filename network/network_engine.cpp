@@ -10,7 +10,7 @@ NetworkEngine::NetworkEngine() {
   Node my_node(Hash<160>::sha1(MY_ID), MY_ID, IP_ADDRESS, DEFAULT_PORT_NUM);
   m_routing_table = std::make_shared<RoutingTable>(my_node, KBUCKET_SIZE);
 
-  m_broadcast_check_table = std::make_shared<std::set<string>>();
+  m_broadcast_check_table = std::make_shared<BroadcastMsgTable>();
 }
 
 void NetworkEngine::setUp(){
@@ -92,6 +92,22 @@ void NetworkEngine::scheduleRefreshBuckets(){
   }
 
   refreshBuckets();
+}
+
+void NetworkEngine::refreshBroadcastTable(){
+  //TODO: gruut util의  Time객체 이용할 것.
+  uint64_t now = static_cast<uint64_t>(
+	  std::chrono::duration_cast<std::chrono::seconds>(
+		  std::chrono::system_clock::now().time_since_epoch())
+		  .count());
+
+  for(auto it = m_broadcast_check_table->cbegin(); it != m_broadcast_check_table->cend();){
+    if(abs((int)(now - it->second )) > KEEP_BROADCAST_MSG_TIME ) {
+	  it = m_broadcast_check_table->erase(it);
+	} else {
+	  ++it;
+	}
+  }
 }
 
 

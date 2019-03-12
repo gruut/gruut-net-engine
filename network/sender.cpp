@@ -3,7 +3,7 @@
 namespace gruut{
 namespace net{
 
-void Sender::setUp(std::shared_ptr<std::set<string>> broadcast_check_table){
+void Sender::setUp(std::shared_ptr<BroadcastMsgTable> broadcast_check_table){
 
   m_broadcast_check_table  = std::move(broadcast_check_table);
 }

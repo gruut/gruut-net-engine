@@ -22,6 +22,8 @@ constexpr auto REQUEST_TIMEOUT = std::chrono::seconds(2);
 
 constexpr unsigned int MAX_THREAD_SIZE = 10;
 
+constexpr size_t KEEP_BROADCAST_MSG_TIME = 180;
+
 //TODO : 임시적으로 사용. 변경될 것.
 const std::string DEFAULT_PORT_NUM = "43234";
 const std::string IP_ADDRESS = "127.0.0.1";

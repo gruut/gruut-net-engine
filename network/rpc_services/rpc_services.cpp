@@ -63,7 +63,16 @@ void GeneralService::proceed() {
 
 		//Forwarding message to other nodes
 		if(m_request.broadcast()){
-		  if(m_broadcast_check_table->count(m_request.message_id())){
+		  std::string msg_id = m_request.message_id();
+		  if(m_broadcast_check_table->count(msg_id) == 0){
+
+		    //TODO: gruut util의  Time객체 이용할 것.
+			uint64_t now = static_cast<uint64_t>(
+				std::chrono::duration_cast<std::chrono::seconds>(
+					std::chrono::system_clock::now().time_since_epoch())
+					.count());
+
+		    m_broadcast_check_table->insert({msg_id, now});
 
 		    std::vector<IpEndpoint> node_addr_list;
 		    //selecting random node in each kBuckets
@@ -130,8 +139,12 @@ void FindNode::proceed() {
 	  node->set_node_id(n.getId());
 	}
 
-	//TODO : current time
-	m_reply.set_time_stamp(0);
+	//TODO: gruut util의  Time객체 이용할 것.
+	uint64_t now = static_cast<uint64_t>(
+		std::chrono::duration_cast<std::chrono::seconds>(
+			std::chrono::system_clock::now().time_since_epoch())
+			.count());
+	m_reply.set_time_stamp(now);
 
 	Status rpc_status = Status::OK;
 	m_receive_status = RpcCallStatus::FINISH;
@@ -164,8 +177,12 @@ void PingPong::proceed() {
 	uint64_t time_stamp = m_request.time_stamp();
 	//TODO : 받은 Ping 에 대해서 routing table 업데이트 필요.
 
-	//TODO : current time
-	m_reply.set_time_stamp(0);
+	//TODO: gruut util의  Time객체 이용할 것.
+	uint64_t now = static_cast<uint64_t>(
+		std::chrono::duration_cast<std::chrono::seconds>(
+			std::chrono::system_clock::now().time_since_epoch())
+			.count());
+	m_reply.set_time_stamp(now);
 	m_reply.set_version(1);
 	m_reply.set_node_id(MY_ID);
 	Status rpc_status = Status::OK;

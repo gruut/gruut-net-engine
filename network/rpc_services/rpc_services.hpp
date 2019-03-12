@@ -74,7 +74,7 @@ public:
   GeneralService(GruutGeneralService::AsyncService *service,
 				 ServerCompletionQueue *cq,
 				 std::shared_ptr<RoutingTable> routing_table,
-				 std::shared_ptr<std::set<string>> broadcast_check_table)
+				 std::shared_ptr<BroadcastMsgTable> broadcast_check_table)
 	  : m_responder(&m_context), m_routing_table(std::move(routing_table)),
 	    m_broadcast_check_table(std::move(broadcast_check_table)){
 
@@ -91,7 +91,7 @@ private:
   grpc_general::MsgStatus m_reply;
   ServerAsyncResponseWriter<grpc_general::MsgStatus> m_responder;
 
-  std::shared_ptr<std::set<string>> m_broadcast_check_table;
+  std::shared_ptr<BroadcastMsgTable> m_broadcast_check_table;
   std::shared_ptr<RoutingTable> m_routing_table;
   void proceed() override;
 };

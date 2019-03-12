@@ -6,7 +6,7 @@ namespace net {
 
 void RpcServer::setUp(std::shared_ptr<SignerConnTable> signer_conn_table,
                       std::shared_ptr<RoutingTable> routing_table,
-                      std::shared_ptr<std::set<string>> broadcast_check_table) {
+                      std::shared_ptr<BroadcastMsgTable> broadcast_check_table) {
 
   m_signer_conn_table = std::move(signer_conn_table);
   m_routing_table = std::move(routing_table);
