@@ -1,6 +1,7 @@
 #pragma once
 #include "rpc_server.hpp"
 #include "rpc_client.hpp"
+#include "http_client.hpp"
 #include "config/network_config.hpp"
 namespace gruut {
 namespace net {
@@ -15,6 +16,8 @@ public:
 
   ~NetworkEngine() = default;
 
+  void setUp();
+  void bootStrap();
   void run();
 
 private:
@@ -22,16 +25,17 @@ private:
   std::shared_ptr<RoutingTable> m_routing_table;
   std::shared_ptr<BroadcastMsgTable> m_broadcast_check_table;
 
-  RpcClient m_sender;
+  RpcClient m_rpc_client;
+  HttpClient m_http_client;
   RpcServer m_rpc_server;
 
-  void setUp();
   void pingTask(const Node &node);
   void findNeighborsTask(const IdType &id, const HashedIdType &hashed_id);
   void refreshBuckets();
   void scheduleRefreshBuckets();
-
   void refreshBroadcastTable();
+
+  void getNodeInfoFromTracker(int max_node = MAX_NODE_INFO_FROM_TRACKER);
 
 };
 
