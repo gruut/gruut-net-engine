@@ -175,7 +175,11 @@ void PingPong::proceed() {
 	std::string sender_port = m_request.sender_port();
 	uint32_t version = m_request.version();
 	uint64_t time_stamp = m_request.time_stamp();
-	//TODO : 받은 Ping 에 대해서 routing table 업데이트 필요.
+
+	//TODO: version 및 time_stamp 값을 이용하여 검증 하거나 처리 할 부분 필요.
+
+	Node peer(Hash<160>::sha1(sender_id),sender_id, sender_address, sender_port);
+	m_routing_table->addPeer(std::move(peer));
 
 	//TODO: gruut util의  Time객체 이용할 것.
 	uint64_t now = static_cast<uint64_t>(
