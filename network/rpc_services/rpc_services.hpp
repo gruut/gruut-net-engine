@@ -35,6 +35,11 @@ struct NeighborsData {
   grpc::Status status;
 };
 
+struct GeneralData {
+  MsgStatus msg_status;
+  grpc::Status status;
+};
+
 class CallData {
 public:
   virtual void proceed() = 0;

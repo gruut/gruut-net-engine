@@ -44,38 +44,39 @@ const std::set<string> TEST_ID_SET = {
 };
 
 
+thread t1([](){
+
+  std::vector<Node> node_list;
+  int cnt = 0;
+  for(auto &test_id : TEST_ID_SET){
+	node_list.emplace_back(
+		Node(Hash<160>::sha1(test_id), test_id, LOCAL_ADDR, TEST_PORT+std::to_string(cnt)));
+	cnt++;
+  }
+
+  Node my_node(Hash<160>::sha1(MY_ID), MY_ID, LOCAL_ADDR, DEFAULT_PORT_NUM);
+
+  std::shared_ptr<RoutingTable> routing_table =
+	  std::make_shared<RoutingTable>(my_node, KBUCKET_SIZE);
+
+  for(auto &node : node_list){
+	routing_table->addPeer(std::move(node));
+  }
+
+  std::shared_ptr<SignerConnTable> signer_table =
+	  std::make_shared<SignerConnTable>();
+
+  std::shared_ptr<BroadcastMsgTable> broadcast_check_table =
+	  std::make_shared<BroadcastMsgTable>();
+
+  RpcServer rpc_server;
+  rpc_server.setUp(signer_table, routing_table, broadcast_check_table);
+
+  rpc_server.run(TEST_PORT);
+});
+
+
 BOOST_AUTO_TEST_SUITE(Test_KademliaService)
-
-	thread t1([](){
-
-	  	std::vector<Node> node_list;
-	  	int cnt = 0;
-	  	for(auto &test_id : TEST_ID_SET){
-	  	  node_list.emplace_back(
-	  	  	Node(Hash<160>::sha1(test_id), test_id, LOCAL_ADDR, TEST_PORT+std::to_string(cnt)));
-	  	  cnt++;
-	  	}
-
-	  	Node my_node(Hash<160>::sha1(MY_ID), MY_ID, LOCAL_ADDR, DEFAULT_PORT_NUM);
-
-	  	std::shared_ptr<RoutingTable> routing_table =
-	  		std::make_shared<RoutingTable>(my_node, KBUCKET_SIZE);
-
-	  	for(auto &node : node_list){
-	  	  routing_table->addPeer(std::move(node));
-	  	}
-
-	  	std::shared_ptr<SignerConnTable> signer_table =
-	  		std::make_shared<SignerConnTable>();
-
-	  	std::shared_ptr<BroadcastMsgTable> broadcast_check_table =
-	  		std::make_shared<BroadcastMsgTable>();
-
-	  	RpcServer rpc_server;
-	  	rpc_server.setUp(signer_table, routing_table, broadcast_check_table);
-
-	  	rpc_server.run(TEST_PORT);
-	});
 
 	BOOST_AUTO_TEST_CASE(self_Ping_Pong) {
   		this_thread::sleep_for(chrono::seconds(2));
@@ -99,5 +100,24 @@ BOOST_AUTO_TEST_SUITE(Test_KademliaService)
 	    BOOST_CHECK_EQUAL(received_data.neighbors.size(), TEST_ID_SET.size());
 	    BOOST_TEST(received_data.status.ok());
 	}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(Test_GeneralService)
+
+  	BOOST_AUTO_TEST_CASE(self_General_send_to_merger_no_broadcast){
+  	   RpcClient general_sender;
+
+  	   std::vector<IpEndpoint> merger_list;
+  	   merger_list.push_back({LOCAL_ADDR, TEST_PORT});
+
+  	   std::string some_data = "test";
+  	   auto received_data = general_sender.sendToMerger(merger_list, some_data);
+
+  	   for(auto &data : received_data){
+  	     BOOST_TEST(data.status.ok());
+  	     BOOST_CHECK_EQUAL(data.msg_status.status(), MsgStatus_Status_SUCCESS);
+  	   }
+  	}
 
 BOOST_AUTO_TEST_SUITE_END()
